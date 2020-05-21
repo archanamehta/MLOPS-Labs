@@ -14,26 +14,27 @@ With Azure ML + Azure DevOps you can effectively and cohesively manage your data
 ![ML lifecycle](./media/ml-lifecycle.png)
 
 
+
 ## DevOps for Machine Learning (Azure MLOps Part 3) - Train and Version Your Model
 
-01_CreateMetadataAndModelsFolders.sh
-mkdir metadata && mkdir models
+    01_CreateMetadataAndModelsFolders.sh
+    mkdir metadata && mkdir models
 
-02_TrainModel.sh
-az ml run submit-script -g $(azureml.resourceGroup) -w $(azureml.workspaceName) -e $(experiment.name) --ct $(amlcompute.clusterName) -d conda_dependencies.yml -c train_diabetes -t ../metadata/run.json train_diabetes.py
+    02_TrainModel.sh
+    az ml run submit-script -g $(azureml.resourceGroup) -w $(azureml.workspaceName) -e $(experiment.name) --ct $(amlcompute.clusterName) -d conda_dependencies.yml -c train_diabetes -t ../metadata/run.json train_diabetes.py
 
-03_RegisterModel.sh
-az ml model register -g $(azureml.resourceGroup) -w $(azureml.workspaceName) -n $(model.name) -f metadata/run.json  --asset-path outputs/models/sklearn_diabetes_model.pkl -d "Linear model using diabetes dataset" --tag "data"="diabetes" --tag "model"="regression" --model-framework ScikitLearn -t metadata/model.json
+    03_RegisterModel.sh
+    az ml model register -g $(azureml.resourceGroup) -w $(azureml.workspaceName) -n $(model.name) -f metadata/run.json  --asset-path outputs/models/sklearn_diabetes_model.pkl -d "Linear model using diabetes dataset" --tag "data"="diabetes" --tag "model"="regression" --model-framework ScikitLearn -t metadata/model.json
 
-04_DownloadModel.sh
-az ml model download -g $(azureml.resourceGroup) -w $(azureml.workspaceName) -i $(jq -r .modelId metadata/model.json) -t ./models --overwrite
+    04_DownloadModel.sh
+    az ml model download -g $(azureml.resourceGroup) -w $(azureml.workspaceName) -i $(jq -r .modelId metadata/model.json) -t ./models --overwrite
 
-05_CopyFilesToArtifactStagingDirectory.txt
+    05_CopyFilesToArtifactStagingDirectory.txt
 
-**/metadata/*
-**/models/*
-**/deployment/*
-**/setup/*
-**/tests/integration/*
+    **/metadata/*
+    **/models/*
+    **/deployment/*
+    **/setup/*
+    **/tests/integration/*
 
 
